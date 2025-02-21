@@ -1,0 +1,23 @@
+from langchain.agents import AgentExecutor, create_tool_calling_agent
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+
+prompt=ChatPromptTemplate.from_messages(
+    [
+        (
+             "system",
+            "You are a helpful assistant,FOr answering the user query, Go and get information from the  Wikipedia and DuckDuckSearchGo and give the final answer  ",
+        ),
+        ("placeholder", "{chat_history}"),
+        ("human","{input}"),
+        ("placeholder","{agent_scratchpad}"),
+    ]
+)
+
+
+tools=[search,wikipedia]
+llm=ChatOpenAI()
+  
+agent=create_tool_calling_agent(llm , tools , prompt)
+agent_executer=AgentExecutor(agent=agent , tools=tools , verbose=True)
+agent_executer.invoke({"input":"What's the day today?"})
